@@ -1,5 +1,5 @@
 
-### **Guía Definitiva de Administración y Monitoreo de Servidores HPE Gen10 vía SSH a iLO 5**
+### **Guía de Administración y Monitoreo de Servidores HPE Gen10 vía SSH a iLO 5**
 
 #### **Introducción**
 

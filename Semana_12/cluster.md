@@ -20,35 +20,39 @@ Esta arquitectura es fundamental para el éxito del laboratorio. Tendremos dos t
 ### Diagrama de la Topología
 
 ```
-          +--------------------------------------+
-          |        Tu PC (Host Físico)           |
-          +--------------------------------------+
-                         |
-           Red NAT (Acceso a Internet para todas las VMs)
-                         |
-+------------------------+------------------------------------------+
-|                        |                                          |
-| eth0                   | eth0                                     | eth0
-|     +------------------+-----------------+      +-----------------+-----+
-+---->|            lb-01 (Activo)         |<---->|           web-01      |
-      |                                    |      |                     |
-      |      (HAProxy + Keepalived)        |      |      (Apache2)      |
-      | eth1                               |      | eth1                |
-      +--+---------------------------------+      +----------+----------+
-         |                                                    |
-         |         LAN Segment: "cluster-net"                 |
-         |        (Red Privada: 192.168.100.0/24)             |
-         |                                                    |
-      +--+---------------------------------+      +----------+----------+
-      | eth1                               |      | eth1                |
-+---->|            lb-02 (Pasivo)         |<---->|           web-02      |
-      |                                    |      |                     |
-      |      (HAProxy + Keepalived)        |      |      (Apache2)      |
-      +------------------------------------+      +---------------------+
-                         |
-            IP VIRTUAL (VIP) FLOTANTE
-                  192.168.100.50
-     (Este es el punto de acceso al servicio)
+      +-----------------+
+               |   USUARIO /     |
+               |     CLIENTE     |
+               +--------+--------+
+                        |
+                        | (Accede siempre a esta dirección)
+                        v
+           +-------------------------+
+           |   IP VIRTUAL (VIP)      |
+           |    192.168.100.50       | --- (Es el punto de entrada único y flotante)
+           +------------+------------+
+                        |
+                        | (El tráfico es recibido por el balanceador ACTIVO)
+                        v
+  +-------------------------------------------------------------+
+  |              NIVEL DE BALANCEO DE CARGA                     |
+  |                                                             |
+  |  +------------------+         (Heartbeat)      +------------------+
+  |  |  Balanceador 01  |<------------------------>|  Balanceador 02  |
+  |  |  (ACTIVO)        |  (Keepalived VRRP)       |  (PASIVO)        |
+  |  +------------------+                          +------------------+
+  |           |                                                     |
+  |           | (HAProxy distribuye el tráfico a los servidores web)  |
+  |           |                                                     |
+  |   +-------+----------------------------------+-------+          |
+  |   |                                          |       |          |
+  |   v                                          v       |          |
+  | +------------------+                   +------------------+       |
+  | | Servidor Web 01  |                   | Servidor Web 02  |       |
+  | +------------------+                   +------------------+       |
+  |                                                                   |
+  |                  NIVEL DE SERVIDORES WEB (BACKEND)                |
+  +-------------------------------------------------------------------+
 ```
 
 ### Tabla de Direccionamiento IP (Red Privada `cluster-net`)

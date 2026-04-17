@@ -35,7 +35,7 @@ Antes de instalar, preparamos el "hardware" virtual:
 4.  **Nombre y Ubicación:** `TrueNAS_Tecsup_Lab`.
 5.  **Procesadores:** Mínimo 2 Cores.
 6.  **Memoria:** Asigna **16384 MB (16GB)**. (*Crítico para el caché ZFS ARC*).
-7.  **Red:** Selecciona **Use bridged networking**.
+7.  **Red:** Selecciona **NAT**.
 8.  **Controladora I/O:** LSI Logic SAS.
 9.  **Discos Virtuales (El Rack):**
     *   Crea el primer disco de **20GB** (Store virtual disk as a single file).

@@ -1,11 +1,11 @@
 
-#  GUÍA INTEGRAL DE DESPLIEGUE: TRUENAS SCALE 25.10.3 (TECSUP)
+#  GUÍA DE DESPLIEGUE: TRUENAS
 
 ## 1. TOPOLOGÍA Y ARQUITECTURA DEL SISTEMA
 Esta es la estructura lógica del entorno que hemos construido:
 
 ```text
-ENTORNO DE ALMACENAMIENTO VIRTUALIZADO (TECSUP)
+ENTORNO DE ALMACENAMIENTO VIRTUALIZADO 
 ===========================================================================
 [ HOST FÍSICO: Intel i9-12900K | Windows 10/11 ]
       |

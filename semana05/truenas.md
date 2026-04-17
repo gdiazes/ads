@@ -102,6 +102,7 @@ Una vez dentro de la Web GUI (`http://10.160.10.127`), ve a **Storage -> Create 
     *   **Pass:** `Tecsup00`
 
 
+---
 
 ## NOTAS FINALES DEL ESPECIALISTA
 *   **Gestión de Memoria:** Verás en el Dashboard que TrueNAS usa gran parte de tus 16GB de RAM. No te asustes, es el **ZFS ARC** trabajando para que el acceso a tus datos sea instantáneo.

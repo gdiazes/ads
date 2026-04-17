@@ -13,7 +13,7 @@ ENTORNO DE ALMACENAMIENTO VIRTUALIZADO
                 |
                 +--- [ VM: TrueNAS SCALE 25.10.3 (Debian 12) ]
                       |
-                      +-- Red (Bridged): IP 10.160.10.127 /24
+                      +-- Red (NAT): IP 10.160.10.127 /24
                       +-- Acceso Web: http://10.160.10.127
                       +-- Credenciales: truenas_admin | Tecsup00
                       +-- Hardware Virtual: 2 vCPUs | 16GB RAM

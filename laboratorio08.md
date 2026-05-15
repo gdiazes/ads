@@ -89,6 +89,7 @@ sudo systemctl enable --now pcsd
 ### FASE 3: Creación del Clúster (Solo en Nodo 1)
 
 **Paso 1: Autenticación de nodos**
+Asignar la ip a cada nodo y modificiar el archivo /etc/hosts con el nombre e ip de cada nodo
 ```bash
 sudo pcs host auth node1 node2 -u hacluster -p password123
 ```

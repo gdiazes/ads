@@ -71,7 +71,7 @@ sudo apt update && sudo apt install -y pacemaker pcs corosync fence-agents nfs-c
 
 **Paso 2: Resolución de nombres y Firewall**
 ```bash
-sudo ufw allow 2224/tcp && sudo ufw allow 5404:5405/udp && sudo ufw allow 80/tcp && sudo ufw allow 2049/tcp && sudo ufw enable
+sudo ufw allow 22/tcp && sudo ufw allow 2224/tcp && sudo ufw allow 5404:5405/udp && sudo ufw allow 80/tcp && sudo ufw allow 2049/tcp && sudo ufw enable
 ```
 > **Nota:** Se abren los puertos para gestión (2224), comunicación del clúster (Corosync), tráfico web (80) y almacenamiento (2049).
 > **Resultado esperado:** "Firewall is active and enabled on system startup".

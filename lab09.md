@@ -1,24 +1,40 @@
 
+# 📘 Guía de Laboratorio: Instalación y Configuración de openDCIM
+**Entorno validado:** Ubuntu Server 20.04 (Focal Fossa) | **Versión openDCIM:** 21.01 | **PHP:** 7.4
 
-### 1. Actualización del sistema e instalación de dependencias
-openDCIM requiere Apache, MySQL (o MariaDB) y PHP con módulos específicos (SNMP es crítico).
+### 📝 Notas del Entorno (Troubleshooting aplicado)
+*   *Se utiliza la versión de lanzamiento **21.01** de openDCIM en lugar de clonar el repositorio de GitHub (rama de desarrollo), ya que esta última exige PHP 8.0+, lo cual puede causar conflictos en entornos académicos con restricciones de red para añadir repositorios externos (PPA).*
+*   *La versión 21.01 es totalmente estable y nativamente compatible con el PHP 7.4 que trae Ubuntu 20.04 por defecto.*
 
+---
+
+## FASE 1: Preparación del Sistema y Dependencias
+
+**1. Actualizar los repositorios locales:**
 ```bash
-# Actualizar repositorios
 sudo apt update && sudo apt upgrade -y
-
-# Instalar LAMP y dependencias de openDCIM
-sudo apt install -y apache2 mariadb-server php php-mysql php-snmp php-gd php-curl php-mbstring php-xml php-ldap git
 ```
 
-### 2. Configuración de la Base de Datos
-Ejecutaremos los comandos que sugiere el manual, pero dentro del prompt de MariaDB.
-
+**2. Instalar el Stack LAMP y módulos de PHP necesarios:**
+*Nota: `apache2-utils` es necesario para el comando htpasswd.*
 ```bash
-# Entrar a MariaDB
-sudo mysql -u root
+sudo apt install -y apache2 mariadb-server wget tar apache2-utils \
+php7.4 php7.4-mysql php7.4-snmp php7.4-gd php7.4-curl \
+php7.4-mbstring php7.4-xml php7.4-ldap libapache2-mod-php7.4
+```
 
-# Dentro de MariaDB (copia y pega estas líneas):
+---
+
+## FASE 2: Configuración de la Base de Datos
+
+**1. Ingresar al motor de base de datos MariaDB:**
+```bash
+sudo mysql -u root
+```
+
+**2. Crear la base de datos, el usuario y asignar permisos:**
+*(Ejecuta estas líneas una por una dentro del prompt de MySQL `MariaDB [(none)]> `)*
+```sql
 CREATE DATABASE dcim;
 CREATE USER 'dcim'@'localhost' IDENTIFIED BY 'dcim';
 GRANT ALL ON dcim.* TO 'dcim'@'localhost';
@@ -26,49 +42,68 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
-### 3. Descarga y Preparación de openDCIM
-Lo instalaremos en `/var/www/html/opendcim` (estándar de Ubuntu).
+---
 
+## FASE 3: Descarga y Preparación de openDCIM
+
+**1. Descargar la versión compatible (21.01) desde el repositorio oficial web:**
 ```bash
-# Clonar el repositorio oficial
-cd /var/www/html
-sudo git clone https://github.com/samilliken/openDCIM.git opendcim
-
-# Entrar al directorio y configurar el archivo de base de datos
-cd /var/www/html/opendcim
-sudo cp db.inc.php-dist db.inc.php
-
-# Ajustar permisos para que Apache pueda escribir
-sudo chown -R www-data:www-data /var/www/html/opendcim
-sudo chmod -R 755 /var/www/html/opendcim
+cd /tmp
+wget https://opendcim.org/packages/openDCIM-21.01.tar.gz
 ```
 
-### 4. Configuración de Autenticación de Apache
-openDCIM delega la seguridad en el servidor web. Crearemos el usuario inicial para entrar.
-
+**2. Crear el directorio y descomprimir el sistema:**
 ```bash
-# Crear archivo de contraseñas (el usuario será 'admin')
-# Te pedirá una contraseña, elígela bien.
-sudo htpasswd -c /etc/apache2/opendcim.htpasswd admin
+sudo mkdir -p /var/www/html/opendcim
+sudo tar -zxvf openDCIM-21.01.tar.gz -C /var/www/html/opendcim --strip-components=1
+```
 
-# Habilitar módulos necesarios de Apache
+**3. Configurar el archivo de conexión a la Base de Datos:**
+```bash
+cd /var/www/html/opendcim
+sudo cp db.inc.php-dist db.inc.php
+```
+
+---
+
+## FASE 4: Corrección de Permisos de Directorio
+*Este paso previene el error de permisos denegados (rojo) en las carpetas de `assets` y fuentes de PDF durante la instalación.*
+
+**1. Asegurar la creación de las subcarpetas requeridas:**
+```bash
+sudo mkdir -p /var/www/html/opendcim/assets/{drawings,pictures,reports}
+```
+
+**2. Asignar propiedad a Apache (`www-data`) y otorgar permisos de escritura (775):**
+```bash
+sudo chown -R www-data:www-data /var/www/html/opendcim
+sudo chmod -R 775 /var/www/html/opendcim/assets/
+sudo chmod -R 775 /var/www/html/opendcim/vendor/mpdf/mpdf/ttfontdata
+```
+
+---
+
+## FASE 5: Seguridad y Configuración de Apache
+*openDCIM no tiene login propio; delega la seguridad en la Autenticación Básica de Apache.*
+
+**1. Crear el usuario de acceso (Administrador):**
+*(Se solicitará ingresar y confirmar una contraseña)*
+```bash
+sudo htpasswd -c /etc/apache2/opendcim.htpasswd admin
+```
+
+**2. Habilitar los módulos de Apache requeridos:**
+```bash
 sudo a2enmod rewrite authn_file authz_user auth_basic
 ```
 
-### 5. Configuración del VirtualHost
-Debemos configurar Apache para que reconozca el directorio y permita el uso de `.htaccess`.
-
+**3. Configurar el VirtualHost o Directorio de Apache:**
+Edita el archivo de configuración por defecto:
 ```bash
-# Crear el archivo de configuración
-sudo nano /etc/apache2/sites-available/opendcim.conf
+sudo nano /etc/apache2/sites-available/000-default.conf
 ```
-
-**Pega este contenido en el editor:**
+Agrega el siguiente bloque `<Directory>` **dentro** de la etiqueta `<VirtualHost *:80>`:
 ```apache
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/html/opendcim
-
     <Directory "/var/www/html/opendcim">
         Options Indexes FollowSymLinks
         AllowOverride All
@@ -77,32 +112,24 @@ sudo nano /etc/apache2/sites-available/opendcim.conf
         AuthUserFile /etc/apache2/opendcim.htpasswd
         Require valid-user
     </Directory>
-
-    ErrorLog ${APACHE_LOG_DIR}/opendcim_error.log
-    CustomLog ${APACHE_LOG_DIR}/opendcim_access.log combined
-</VirtualHost>
 ```
+*(Guarda con `Ctrl+O`, `Enter`, y sal con `Ctrl+X`)*
 
-### 6. Activación y Reinicio
+**4. Reiniciar Apache para aplicar todos los cambios:**
 ```bash
-# Desactivar el sitio por defecto y activar el nuevo
-sudo a2dissite 000-default.conf
-sudo a2ensite opendcim.conf
-
-# Reiniciar Apache para aplicar cambios
 sudo systemctl restart apache2
 ```
 
-### 7. Paso Final: Instalación vía Web
-Ahora abre tu navegador y dirígete a la IP de tu servidor:
-`http://tu-ip-servidor/`
-
-1. Te pedirá el usuario y contraseña que creaste con `htpasswd` (**admin**).
-2. El sistema detectará que la base de datos está vacía y te guiará por el proceso de instalación automática (haciendo click en los enlaces que aparezcan en pantalla para crear las tablas).
-
 ---
 
-**Notas de SysAdmin:**
-* **PHP SNMP:** En Ubuntu, al instalar `php-snmp`, el módulo se habilita automáticamente. No suele ser necesario editar el `php.ini` manualmente a menos que tengas varias versiones de PHP.
-* **Seguridad:** Si esto va a producción, te recomiendo instalar un certificado SSL con Certbot (`sudo apt install python3-certbot-apache`).
-* **db.inc.php:** Si decidiste cambiar la contraseña de la base de datos en el paso 2, asegúrate de editar `sudo nano /var/www/html/opendcim/db.inc.php` para que coincida.
+## FASE 6: Instalación vía Interfaz Web
+
+1. Abre un navegador web en una máquina que tenga alcance al servidor.
+2. Ingresa a la URL: **`http://<IP_DEL_SERVIDOR>/opendcim`**
+3. El navegador te pedirá credenciales. Ingresa el usuario **`admin`** y la contraseña que creaste en el paso de `htpasswd`.
+4. Aparecerá la pantalla de pre-vuelo (Pre-flight check). Verifica que todas las dependencias y permisos (assets) estén con un **"Yes" en color verde**.
+5. Desplázate hacia el final de la página y haz clic en el enlace para iniciar la creación automática de tablas en la base de datos (Upgrade/Install Database).
+6. ¡Listo! Accederás al panel de control principal de openDCIM.
+
+--- 
+**¡Fin del Laboratorio!** 🚀

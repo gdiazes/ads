@@ -20,21 +20,8 @@ La red de laboratorio opera bajo el segmento lógico corporativo `10.160.10.0/24
     *   `SRV-WEB-WIN` (`10.160.10.51`) consume almacenamiento mediante el protocolo **SMB** (Puerto TCP 445).
     *   `SRV-WEB-LNX` (`10.160.10.52`) consume almacenamiento mediante el protocolo **NFS** (Puertos TCP/UDP 2049).
 
-```text
-       [ Internet / Red Externa ]
-                   |
-                   v
-         [ Router Perimetral ] (GW: 10.160.10.2)
-                   |
-                   v
-         [ Switch Core / Acceso ] (10.160.10.0/24)
-            /      |      \
-           /       |       \
-          v        v        v
-    [TrueNAS]  [Windows]  [Ubuntu]
-    (.50)      (.51)      (.52)
-    (Storage)  (SMB)      (NFS)
-```
+![Topología Lógica](./tlogica.jpg)
+
 
 ---
 

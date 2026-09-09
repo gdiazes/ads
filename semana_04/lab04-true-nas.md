@@ -54,7 +54,7 @@ Para simular un entorno de Centro de Datos real, la infraestructura física se d
         *   Desde el **Switch Core** hacia el **Router Perimetral** (Enlace Uplink).
     *   **Alimentación (Power):** Cables de poder IEC desde las fuentes redundantes de los servidores y equipos de red hacia las PDU's del Rack 42U.
 
-*(Prompt sugerido para generar la imagen de la topología en una herramienta IA como DALL-E, Midjourney o Canva: `A professional datacenter network diagram inside a 42U server rack, showing a core switch, a perimeter router, a storage server with TrueNAS, and compute servers running Windows and Ubuntu, connected with structured ethernet cables, clean modern blueprint style, technical drawing.`)*
+![Topología Física](./lab04-truenas.jpg)
 
 ---
 

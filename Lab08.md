@@ -3,8 +3,8 @@
 
 **Objetivo:** Diseñar, desplegar y auditar una infraestructura de Alta Disponibilidad (HA) distribuida en múltiples equipos físicos, utilizando almacenamiento centralizado y un clúster activo-pasivo, basándose en la metodología **PPDIOO** (Prepare, Plan, Design, Implement, Operate, Optimize).
 
-**Tiempo de Ejecución:** 100 Minutos.
-**Modalidad:** Trabajo de 4 estudiantes distribuidos en 4 PCs físicas.
+**Tiempo de Ejecución: ** 100 Minutos.
+**Modalidad: ** Trabajo de 4 estudiantes distribuidos en 4 PCs físicas.
 
 ---
 

@@ -55,7 +55,7 @@ El grupo de 4 estudiantes utilizará 4 PCs físicas en el laboratorio de la sigu
 
 
 
-## RÚBRICA DE EVALUACIÓN DUAL (ESCALA 0 - 20 PUNTOS)
+## RÚBRICA DE EVALUACIÓN
 La nota final del alumno es la suma de la Parte A (hasta 8 pts) + Parte B (hasta 12 pts).
 
 ### PARTE A: Evaluación GRUPAL (Hasta 8 Puntos) - Producto Final

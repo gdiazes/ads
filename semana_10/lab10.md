@@ -33,7 +33,7 @@ Al finalizar la sesión, el estudiante será capaz de:
 La institución requiere actualizar la documentación oficial de su **Data Center Estudiantil**, pero el archivo CAD original se encuentra parcialmente dañado: se han perdido las cotas de profundidad del módulo, las holguras en los extremos de la hilera, la etiqueta del gabinete central y el valor de potencia nominal por rack.
 
 Como **Ingeniero Especialista en Infraestructura**, tu labor es **rescatar y validar la información técnica** completando tres fases de trabajo en un tiempo límite de **100 minutos**.
-
+```
 [00:00 - 00:25] FASE 1: Deducción Matemática y Análisis de Ingeniería (25 min)
 [00:25 - 00:75] FASE 2: Digitalización del Plano As-Built en Draw.io (50 min)
 [00:75 - 00:95] FASE 3: Auditoría Normativa y Preguntas de Control (20 min)
